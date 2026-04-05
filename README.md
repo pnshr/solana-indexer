@@ -240,14 +240,21 @@ Validation entry points:
 
 ```bash
 npm run validate:fast
+npm run validate:smoke
 npm run validate:local
 npm run validate:docker
 ```
+
+If the service is already running, `npm run validate:smoke` checks `/health`, `/ready`, `/metrics`, `/api/program`, `/api`, and `/api/stats` against the live instance. Use `VALIDATION_BASE_URL` to point it at a non-default host or port, and `VALIDATION_API_TOKEN` if the API is protected.
 
 Reviewer-facing docs:
 
 - [`docs/VALIDATION.md`](docs/VALIDATION.md)
 - [`docs/REVIEWER_GUIDE.md`](docs/REVIEWER_GUIDE.md)
+
+GitHub Actions:
+
+- [`.github/workflows/validation.yml`](.github/workflows/validation.yml) runs `validate:fast` on pushes and pull requests, and exposes a manual `validate:docker` workflow-dispatch path for the heavier containerized proof.
 
 ## Indexing Modes
 

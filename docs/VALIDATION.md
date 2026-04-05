@@ -62,6 +62,31 @@ What it does not prove:
 
 - actual live chain ingestion
 
+## 2.5. Smoke check against an already running service
+
+```bash
+npm run validate:smoke
+```
+
+Optional environment variables:
+
+```bash
+VALIDATION_BASE_URL=http://127.0.0.1:3000
+VALIDATION_API_TOKEN=your-token-if-api-auth-is-enabled
+```
+
+What it proves:
+
+- the currently running service responds on `/health` and `/ready`
+- the protected API surface is reachable when auth is configured correctly
+- `/metrics`, `/api`, `/api/program`, and `/api/stats` are wired and returning live responses
+
+What it does not prove:
+
+- schema generation from scratch
+- database bootstrapping
+- cold-start or live indexing behavior
+
 ## 3. Full Docker Compose validation
 
 ```bash
@@ -138,3 +163,12 @@ They do not fully prove:
 - long-running mainnet stability
 - reorg behavior
 - destructive IDL migration handling
+
+## CI proof
+
+The repository also ships with [`.github/workflows/validation.yml`](../.github/workflows/validation.yml):
+
+- `validate:fast` runs automatically on push and pull request
+- `validate:docker` is available as a manual workflow-dispatch path for a heavier containerized check
+
+That workflow does not replace local review, but it does mean the repo can continuously prove its fast validation path on GitHub.

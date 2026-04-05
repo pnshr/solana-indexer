@@ -13,6 +13,14 @@ npm run validate:fast
 
 This proves the project builds and the deterministic Jest suite passes.
 
+If the service is already running and you only want a one-minute liveness/API check:
+
+```bash
+npm run validate:smoke
+```
+
+Use `VALIDATION_BASE_URL` and `VALIDATION_API_TOKEN` if your instance is not on the default host or has API auth enabled.
+
 ### Step 2: local boot + schema/API proof
 
 ```bash
@@ -75,6 +83,7 @@ Suggested live checks:
 ## Files worth inspecting
 
 - `docs/VALIDATION.md`
+- `.github/workflows/validation.yml`
 - `src/database/schema.ts`
 - `src/decoder/index.ts`
 - `src/indexer/processor.ts`
