@@ -6,7 +6,7 @@ services:
       POSTGRES_PASSWORD: indexer
       POSTGRES_DB: solana_indexer
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -29,14 +29,23 @@ services:
       SOLANA_RPC_URL: ${SOLANA_RPC_URL:-https://api.mainnet-beta.solana.com}
       SOLANA_WS_URL: ${SOLANA_WS_URL:-wss://api.mainnet-beta.solana.com}
       PROGRAM_ID: ${PROGRAM_ID}
-      IDL_PATH: /app/idl.json
+      IDL_PATH: ${IDL_PATH:-/app/idl.json}
       DATABASE_URL: postgresql://indexer:indexer@postgres:5432/solana_indexer
       API_PORT: 3000
       API_HOST: 0.0.0.0
+      API_AUTH_TOKEN: ${API_AUTH_TOKEN:-}
+      API_RATE_LIMIT_WINDOW_MS: ${API_RATE_LIMIT_WINDOW_MS:-60000}
+      API_RATE_LIMIT_MAX_REQUESTS: ${API_RATE_LIMIT_MAX_REQUESTS:-120}
+      ENABLE_METRICS: ${ENABLE_METRICS:-true}
       INDEXER_MODE: ${INDEXER_MODE:-realtime}
       BATCH_START_SLOT: ${BATCH_START_SLOT:-}
       BATCH_END_SLOT: ${BATCH_END_SLOT:-}
       BATCH_SIGNATURES: ${BATCH_SIGNATURES:-}
+      BATCH_RESUME: ${BATCH_RESUME:-true}
+      INDEXER_DISABLE_RUN: ${INDEXER_DISABLE_RUN:-false}
+      REALTIME_HEALTHCHECK_INTERVAL_MS: ${REALTIME_HEALTHCHECK_INTERVAL_MS:-30000}
+      REALTIME_RECONNECT_DELAY_MS: ${REALTIME_RECONNECT_DELAY_MS:-5000}
+      REALTIME_LAG_WARNING_SLOTS: ${REALTIME_LAG_WARNING_SLOTS:-150}
       MAX_RETRIES: ${MAX_RETRIES:-5}
       INITIAL_RETRY_DELAY_MS: ${INITIAL_RETRY_DELAY_MS:-500}
       MAX_RETRY_DELAY_MS: ${MAX_RETRY_DELAY_MS:-30000}
@@ -44,6 +53,11 @@ services:
       LOG_LEVEL: ${LOG_LEVEL:-info}
     restart: unless-stopped
     stop_grace_period: 20s
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/health').then((res) => process.exit(res.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
 
 volumes:
   pgdata:

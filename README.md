@@ -215,7 +215,7 @@ The stack starts:
 Install dependencies:
 
 ```bash
-npm install
+npm ci
 ```
 
 Run in development mode:
@@ -235,6 +235,19 @@ Run tests:
 ```bash
 npm test
 ```
+
+Validation entry points:
+
+```bash
+npm run validate:fast
+npm run validate:local
+npm run validate:docker
+```
+
+Reviewer-facing docs:
+
+- [`docs/VALIDATION.md`](docs/VALIDATION.md)
+- [`docs/REVIEWER_GUIDE.md`](docs/REVIEWER_GUIDE.md)
 
 ## Indexing Modes
 
@@ -430,6 +443,7 @@ GET /api/accounts/vault/<pubkey>/history?slot_from=280000000&limit=50
 | `BATCH_SIGNATURES` | unset | Comma-separated signature list |
 | `BATCH_SIZE` | `100` | Batch processing chunk size |
 | `BATCH_RESUME` | `true` | Resume interrupted batch runs from stored checkpoint |
+| `INDEXER_DISABLE_RUN` | `false` | Validation-only mode: boot API and generate schema without running batch/realtime workers |
 | `REALTIME_HEALTHCHECK_INTERVAL_MS` | `30000` | Realtime health and lag-check interval |
 | `REALTIME_RECONNECT_DELAY_MS` | `5000` | Delay between realtime reconnect attempts |
 | `REALTIME_LAG_WARNING_SLOTS` | `150` | Warn when realtime lag exceeds this slot distance |

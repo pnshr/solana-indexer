@@ -39,6 +39,7 @@ const configSchema = z.object({
     batchSignatures: z.array(z.string()).optional(),
     batchSize: z.number().int().positive(),
     batchResume: z.boolean(),
+    disableRun: z.boolean(),
   }),
   realtime: z.object({
     healthCheckIntervalMs: z.number().int().positive(),
@@ -104,6 +105,7 @@ function loadConfig(): Config {
       batchSignatures: parseSignatures(process.env.BATCH_SIGNATURES),
       batchSize: Number.parseInt(process.env.BATCH_SIZE || '100', 10),
       batchResume: parseBoolean(process.env.BATCH_RESUME, true),
+      disableRun: parseBoolean(process.env.INDEXER_DISABLE_RUN, false),
     },
     realtime: {
       healthCheckIntervalMs: Number.parseInt(process.env.REALTIME_HEALTHCHECK_INTERVAL_MS || '30000', 10),

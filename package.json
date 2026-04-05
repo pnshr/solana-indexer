@@ -7,7 +7,10 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "ts-node src/index.ts",
-    "test": "jest --runInBand --detectOpenHandles"
+    "test": "jest --runInBand --detectOpenHandles",
+    "validate:fast": "node scripts/validate-fast.js",
+    "validate:local": "node scripts/validate-local.js",
+    "validate:docker": "node scripts/validate-docker.js"
   },
   "dependencies": {
     "@coral-xyz/anchor": "^0.30.1",

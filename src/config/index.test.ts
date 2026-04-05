@@ -37,4 +37,13 @@ describe('config', () => {
       });
     }).toThrow('Invalid BATCH_END_SLOT');
   });
+
+  it('parses INDEXER_DISABLE_RUN as a boolean flag', () => {
+    process.env.INDEXER_DISABLE_RUN = 'true';
+
+    jest.isolateModules(() => {
+      const { config } = require('./index');
+      expect(config.indexer.disableRun).toBe(true);
+    });
+  });
 });

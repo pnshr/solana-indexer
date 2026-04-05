@@ -12,7 +12,7 @@ import { metrics } from './observability/metrics';
 
 const log = createChildLogger('main');
 
-async function main(): Promise<void> {
+export async function main(): Promise<void> {
   metrics.setLifecycleState('starting');
   log.info({ mode: config.indexer.mode }, 'Solana Universal Indexer starting');
 
@@ -80,6 +80,14 @@ async function main(): Promise<void> {
   process.on('SIGTERM', () => {
     requestShutdown('SIGTERM');
   });
+  process.on('SIGBREAK', () => {
+    requestShutdown('SIGBREAK');
+  });
+
+  if (config.indexer.disableRun) {
+    log.info('Indexer run disabled by configuration; API and schema are ready for validation');
+    return;
+  }
 
   if (config.indexer.mode === 'batch') {
     metrics.setLifecycleState('batch_running');
@@ -104,8 +112,10 @@ async function main(): Promise<void> {
   });
 }
 
-main().catch((err) => {
-  metrics.setLifecycleState('error');
-  log.error({ error: (err as Error).message, stack: err.stack }, 'Fatal startup error');
-  process.exit(1);
-});
+if (require.main === module) {
+  main().catch((err) => {
+    metrics.setLifecycleState('error');
+    log.error({ error: (err as Error).message, stack: err.stack }, 'Fatal startup error');
+    process.exit(1);
+  });
+}
