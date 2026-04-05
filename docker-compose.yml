@@ -1,0 +1,49 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: indexer
+      POSTGRES_PASSWORD: indexer
+      POSTGRES_DB: solana_indexer
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U indexer -d solana_indexer"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  indexer:
+    build: .
+    init: true
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "${API_PORT:-3000}:3000"
+    volumes:
+      - ./idl.json:/app/idl.json:ro
+    environment:
+      SOLANA_RPC_URL: ${SOLANA_RPC_URL:-https://api.mainnet-beta.solana.com}
+      SOLANA_WS_URL: ${SOLANA_WS_URL:-wss://api.mainnet-beta.solana.com}
+      PROGRAM_ID: ${PROGRAM_ID}
+      IDL_PATH: /app/idl.json
+      DATABASE_URL: postgresql://indexer:indexer@postgres:5432/solana_indexer
+      API_PORT: 3000
+      API_HOST: 0.0.0.0
+      INDEXER_MODE: ${INDEXER_MODE:-realtime}
+      BATCH_START_SLOT: ${BATCH_START_SLOT:-}
+      BATCH_END_SLOT: ${BATCH_END_SLOT:-}
+      BATCH_SIGNATURES: ${BATCH_SIGNATURES:-}
+      MAX_RETRIES: ${MAX_RETRIES:-5}
+      INITIAL_RETRY_DELAY_MS: ${INITIAL_RETRY_DELAY_MS:-500}
+      MAX_RETRY_DELAY_MS: ${MAX_RETRY_DELAY_MS:-30000}
+      BATCH_SIZE: ${BATCH_SIZE:-100}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    restart: unless-stopped
+    stop_grace_period: 20s
+
+volumes:
+  pgdata:

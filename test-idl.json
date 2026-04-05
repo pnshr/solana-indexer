@@ -1,0 +1,86 @@
+{
+  "version": "0.1.0",
+  "name": "token_vault",
+  "instructions": [
+    {
+      "name": "initialize",
+      "accounts": [
+        { "name": "vault", "isMut": true, "isSigner": false },
+        { "name": "authority", "isMut": true, "isSigner": true },
+        { "name": "systemProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "vaultBump", "type": "u8" },
+        { "name": "maxCapacity", "type": "u64" }
+      ]
+    },
+    {
+      "name": "deposit",
+      "accounts": [
+        { "name": "vault", "isMut": true, "isSigner": false },
+        { "name": "depositor", "isMut": true, "isSigner": true },
+        { "name": "tokenAccount", "isMut": true, "isSigner": false },
+        { "name": "tokenProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "amount", "type": "u64" }
+      ]
+    },
+    {
+      "name": "withdraw",
+      "accounts": [
+        { "name": "vault", "isMut": true, "isSigner": false },
+        { "name": "authority", "isMut": true, "isSigner": true },
+        { "name": "tokenAccount", "isMut": true, "isSigner": false },
+        { "name": "tokenProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "amount", "type": "u64" },
+        { "name": "memo", "type": "string" }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Vault",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "authority", "type": "publicKey" },
+          { "name": "totalDeposited", "type": "u64" },
+          { "name": "maxCapacity", "type": "u64" },
+          { "name": "depositCount", "type": "u32" },
+          { "name": "isActive", "type": "bool" },
+          { "name": "bump", "type": "u8" }
+        ]
+      }
+    }
+  ],
+  "types": [
+    {
+      "name": "VaultStatus",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          { "name": "Active" },
+          { "name": "Paused" },
+          { "name": "Closed" }
+        ]
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "DepositEvent",
+      "fields": [
+        { "name": "depositor", "type": "publicKey" },
+        { "name": "amount", "type": "u64" },
+        { "name": "timestamp", "type": "i64" }
+      ]
+    }
+  ],
+  "errors": [
+    { "code": 6000, "name": "VaultFull", "msg": "Vault has reached maximum capacity" },
+    { "code": 6001, "name": "Unauthorized", "msg": "Unauthorized access" }
+  ]
+}
