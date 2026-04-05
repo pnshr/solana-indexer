@@ -814,15 +814,18 @@ export function createApi(idl: AnchorIdl): express.Application {
       version: idl.version,
       instructions: idl.instructions.map((ix) => ({
         name: ix.name,
+        route: sanitizeSqlName(ix.name),
         accounts: ix.accounts.map((a) => a.name),
         args: ix.args.map((a) => ({ name: a.name, type: a.type })),
       })),
       accounts: idl.accounts?.map((a) => ({
         name: a.name,
+        route: sanitizeSqlName(a.name),
         fields: a.type.fields.map((f) => ({ name: f.name, type: f.type })),
       })) ?? [],
       events: idl.events?.map((e) => ({
         name: e.name,
+        route: sanitizeSqlName(e.name),
         fields: e.fields.map((f) => ({ name: f.name, type: f.type })),
       })) ?? [],
     });

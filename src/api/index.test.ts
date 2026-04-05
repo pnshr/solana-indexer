@@ -223,6 +223,22 @@ describe('API validation', () => {
     });
   });
 
+  it('returns sanitized route metadata for instructions, accounts, and events', async () => {
+    await withServer(async (baseUrl) => {
+      const response = await fetch(`${baseUrl}/api/program`);
+      const payload = await response.json() as {
+        instructions: Array<{ route: string }>
+        accounts: Array<{ route: string }>
+        events: Array<{ route: string }>
+      };
+
+      expect(response.status).toBe(200);
+      expect(payload.instructions[0].route).toBe('deposit');
+      expect(payload.accounts[0].route).toBe('vault');
+      expect(payload.events[0].route).toBe('deposit_event');
+    });
+  });
+
   it('returns 400 for invalid transaction slot filters', async () => {
     await withServer(async (baseUrl) => {
       const response = await fetch(`${baseUrl}/api/transactions?slot_from=abc`);

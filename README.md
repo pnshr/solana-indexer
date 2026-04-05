@@ -252,11 +252,17 @@ Reviewer-facing docs:
 
 - [`docs/VALIDATION.md`](docs/VALIDATION.md)
 - [`docs/REVIEWER_GUIDE.md`](docs/REVIEWER_GUIDE.md)
+- [`docs/DEMO_UI.md`](docs/DEMO_UI.md)
 
 GitHub Actions:
 
 - [`.github/workflows/validation.yml`](.github/workflows/validation.yml) runs `validate:fast` on pushes and pull requests, and exposes a manual `validate:docker` workflow-dispatch path for the heavier containerized proof.
 - The same manual workflow-dispatch path also runs `validate:batch`, which exercises the real batch write path against PostgreSQL with a deterministic fake RPC boundary.
+
+Demo UI:
+
+- A minimal reviewer-facing React + Vite console lives in [`demo-ui/`](demo-ui)
+- Run it with the backend via `npm run demo:dev`
 
 ## Indexing Modes
 
