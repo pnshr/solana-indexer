@@ -570,15 +570,6 @@ src/
   index.ts
 ```
 
-## Notes For Submission
-
-If you are using this repository for a hackathon or bounty submission, add:
-
-- your public GitHub repository URL
-- your Twitter/X thread describing the build process and trade-offs
-
-A ready-to-edit English thread draft is included in `TWITTER_THREAD.md`.
-
 ## License
 
 MIT
