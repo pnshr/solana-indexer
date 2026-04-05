@@ -241,6 +241,7 @@ Validation entry points:
 ```bash
 npm run validate:fast
 npm run validate:smoke
+npm run validate:batch
 npm run validate:local
 npm run validate:docker
 ```
@@ -255,6 +256,7 @@ Reviewer-facing docs:
 GitHub Actions:
 
 - [`.github/workflows/validation.yml`](.github/workflows/validation.yml) runs `validate:fast` on pushes and pull requests, and exposes a manual `validate:docker` workflow-dispatch path for the heavier containerized proof.
+- The same manual workflow-dispatch path also runs `validate:batch`, which exercises the real batch write path against PostgreSQL with a deterministic fake RPC boundary.
 
 ## Indexing Modes
 

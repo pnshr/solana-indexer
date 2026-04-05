@@ -58,3 +58,6 @@ jobs:
 
       - name: Run Docker validation
         run: npm run validate:docker
+
+      - name: Run batch integration validation
+        run: npm run validate:batch

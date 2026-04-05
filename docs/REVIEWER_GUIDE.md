@@ -39,6 +39,22 @@ It proves:
 - on Unix-like systems, the process shuts down cleanly on `SIGINT`
 - on Windows, the process stop path is exercised and graceful-shutdown proof is deferred to Docker `SIGTERM` validation
 
+### Step 2.5: real batch write-path proof
+
+```bash
+npm run validate:batch
+```
+
+This is the strongest deterministic proof of the repository's batch-indexing claim without relying on a live Solana RPC.
+
+It proves:
+
+- the real batch write path persists data into PostgreSQL
+- generated instruction/event/account tables receive writes
+- checkpoint state is persisted
+- an aborted batch resumes from its stored checkpoint
+- a successful rerun does not duplicate claimed transactions
+
 ### Step 3: full Docker Compose proof
 
 ```bash

@@ -87,7 +87,37 @@ What it does not prove:
 - database bootstrapping
 - cold-start or live indexing behavior
 
-## 3. Full Docker Compose validation
+## 3. Batch integration validation with a deterministic fake RPC
+
+```bash
+npm run validate:batch
+```
+
+What it does:
+
+1. Starts PostgreSQL via `docker compose`
+2. Loads the sample Anchor IDL
+3. Generates the schema against a real PostgreSQL instance
+4. Runs the real `BatchIndexer` and `TransactionProcessor` against that database
+5. Uses a deterministic fake RPC boundary so the write path is stable and reproducible
+6. Verifies three scenarios:
+   - signature-list batch writes
+   - abort plus checkpoint resume
+   - slot-range batch plus account snapshot indexing
+
+What it proves:
+
+- the real batch orchestration code writes into `_transactions` and generated instruction/event/account tables
+- checkpoint state is persisted and used for resume after an aborted batch
+- successful reruns do not duplicate already-claimed transactions
+- slot-range selection is applied before processing and account snapshot indexing is invoked afterwards
+
+What it does not prove:
+
+- real Solana RPC decoding on live-chain data
+- websocket/realtime behavior
+
+## 4. Full Docker Compose validation
 
 ```bash
 npm run validate:docker
@@ -169,6 +199,6 @@ They do not fully prove:
 The repository also ships with [`.github/workflows/validation.yml`](../.github/workflows/validation.yml):
 
 - `validate:fast` runs automatically on push and pull request
-- `validate:docker` is available as a manual workflow-dispatch path for a heavier containerized check
+- `validate:docker` and `validate:batch` are available as manual workflow-dispatch paths for heavier checks
 
 That workflow does not replace local review, but it does mean the repo can continuously prove its fast validation path on GitHub.

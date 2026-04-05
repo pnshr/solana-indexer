@@ -10,6 +10,7 @@
     "test": "jest --runInBand --detectOpenHandles",
     "validate:fast": "node scripts/validate-fast.js",
     "validate:smoke": "node scripts/smoke-check.js",
+    "validate:batch": "node scripts/validate-batch.js",
     "validate:local": "node scripts/validate-local.js",
     "validate:docker": "node scripts/validate-docker.js"
   },
